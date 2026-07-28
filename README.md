@@ -702,7 +702,7 @@ Therefore Kubernetes will not pull the image. The exact image must already exist
 Current image setting:
 
 ```bash
-export APP_IMAGE="ghcr.io/GITHUB_USERNAME/ipgeo-api:v1.0.0"
+export APP_IMAGE="ghcr.io/homfar/ipgeo-api:v1.0.0"
 ```
 
 For a public or production deployment, the recommended approach is:
@@ -714,7 +714,7 @@ For a public or production deployment, the recommended approach is:
 Example:
 
 ```bash
-export APP_IMAGE="ghcr.io/GITHUB_USERNAME/ipgeo-api:v1.0.0"
+export APP_IMAGE="ghcr.io/homfar/ipgeo-api:v1.0.0"
 ```
 
 ---
@@ -730,7 +730,7 @@ read -rsp "Database password: " DB_PASSWORD && export DB_PASSWORD && echo
 Set the image:
 
 ```bash
-export APP_IMAGE="ghcr.io/GITHUB_USERNAME/ipgeo-api:v1.0.0"
+export APP_IMAGE="ghcr.io/homfar/ipgeo-api:v1.0.0"
 ```
 
 Confirm variables:

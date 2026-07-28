@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export KUBECONFIG="${KUBECONFIG:-$ROOT_DIR/kubeconfig}"
 
-: "${APP_IMAGE:?Set APP_IMAGE, for example ghcr.io/GITHUB_USERNAME/ipgeo-api:v1.0.0}"
+: "${APP_IMAGE:?Set APP_IMAGE, for example ghcr.io/homfar/ipgeo-api:v1.0.0}"
 : "${DB_PASSWORD:?Set DB_PASSWORD before running this script}"
 
 kubectl apply -f "$ROOT_DIR/kubernetes/namespaces.yaml"
