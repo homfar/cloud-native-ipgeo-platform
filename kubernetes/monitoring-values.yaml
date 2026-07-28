@@ -12,3 +12,10 @@ prometheus:
 
 alertmanager:
   enabled: true
+
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigSelector: {}
+    alertmanagerConfigNamespaceSelector: {}
+    alertmanagerConfigMatcherStrategy:
+      type: None
