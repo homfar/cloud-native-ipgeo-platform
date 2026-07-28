@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ipgeo-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  ipgeo.json: |
+    {
+      "title": "IP Geo API",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "Successful lookups",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "targets": [
+            {
+              "expr": "sum(rate(ipgeo_lookup_total{status=\"success\"}[5m]))",
+              "legendFormat": "success"
+            }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "Failed lookups",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "targets": [
+            {
+              "expr": "sum(rate(ipgeo_lookup_total{status=\"error\"}[5m]))",
+              "legendFormat": "error"
+            }
+          ]
+        }
+      ]
+    }

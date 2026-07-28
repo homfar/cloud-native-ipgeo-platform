@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: database
+spec:
+  instances: 3
+
+  bootstrap:
+    initdb:
+      database: ipgeo
+      owner: app
+      secret:
+        name: app-db-secret
+
+  storage:
+    storageClass: local-path
+    size: 5Gi
+
+  monitoring:
+    enablePodMonitor: true

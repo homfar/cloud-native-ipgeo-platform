@@ -1,0 +1,144 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ipgeo-api-rules
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: ipgeo-api
+    app.kubernetes.io/part-of: ipgeo-platform
+spec:
+  groups:
+    - name: ipgeo-api.availability
+      rules:
+        - alert: IPGeoAPINoHealthyTargets
+          expr: |
+            (
+              sum(up{
+                namespace="app",
+                job="ipgeo-api"
+              })
+              or vector(0)
+            ) < 1
+          for: 1m
+          labels:
+            severity: critical
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API has no healthy Prometheus targets"
+            description: "Prometheus has not been able to scrape any healthy IPGeo API target for at least one minute."
+
+        - alert: IPGeoAPITargetMissing
+          expr: |
+            absent(up{
+              namespace="app",
+              job="ipgeo-api"
+            })
+          for: 2m
+          labels:
+            severity: critical
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API target is missing"
+            description: "No Prometheus target exists for the IPGeo API. Check the Service, ServiceMonitor and pod labels."
+
+        - alert: IPGeoAPIReplicaDegraded
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace="app",
+              deployment="ipgeo-api"
+            }
+            <
+            kube_deployment_spec_replicas{
+              namespace="app",
+              deployment="ipgeo-api"
+            }
+          for: 5m
+          labels:
+            severity: warning
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API replica availability is degraded"
+            description: "The number of available IPGeo API replicas is lower than the desired replica count."
+
+        - alert: IPGeoAPINoAvailableReplicas
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace="app",
+              deployment="ipgeo-api"
+            } < 1
+          for: 1m
+          labels:
+            severity: critical
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API has no available replicas"
+            description: "The IPGeo API Deployment has had no available replicas for at least one minute."
+
+    - name: ipgeo-api.runtime
+      rules:
+        - alert: IPGeoAPIContainerRestarting
+          expr: |
+            increase(
+              kube_pod_container_status_restarts_total{
+                namespace="app",
+                container="api"
+              }[15m]
+            ) > 2
+          for: 2m
+          labels:
+            severity: warning
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API container is restarting repeatedly"
+            description: "An IPGeo API container restarted more than twice during the last 15 minutes."
+
+        - alert: IPGeoAPIHighInvalidRequestRatio
+          expr: |
+            (
+              sum(increase(ipgeo_lookup_total{
+                namespace="app",
+                job="ipgeo-api",
+                status="invalid"
+              }[10m]))
+              /
+              clamp_min(
+                sum(increase(ipgeo_lookup_total{
+                  namespace="app",
+                  job="ipgeo-api"
+                }[10m])),
+                1
+              )
+            ) > 0.20
+            and
+            sum(increase(ipgeo_lookup_total{
+              namespace="app",
+              job="ipgeo-api"
+            }[10m])) >= 10
+          for: 5m
+          labels:
+            severity: warning
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API invalid-request ratio is high"
+            description: "More than 20 percent of at least 10 lookup requests were invalid during the last 10 minutes."
+
+        - alert: IPGeoAPINoSuccessfulLookups
+          expr: |
+            sum(increase(ipgeo_lookup_total{
+              namespace="app",
+              job="ipgeo-api",
+              status="success"
+            }[15m])) == 0
+            and
+            sum(increase(ipgeo_lookup_total{
+              namespace="app",
+              job="ipgeo-api"
+            }[15m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+            service: ipgeo-api
+          annotations:
+            summary: "IPGeo API has received requests but no successful lookup"
+            description: "The API received lookup requests during the last 15 minutes, but none completed successfully."

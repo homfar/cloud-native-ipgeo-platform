@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: ipgeo-api-routing
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: ipgeo-api
+    app.kubernetes.io/part-of: ipgeo-platform
+spec:
+  route:
+    receiver: ipgeo-webhook
+    groupBy:
+      - alertname
+      - namespace
+      - service
+      - severity
+    groupWait: 10s
+    groupInterval: 30s
+    repeatInterval: 4h
+    matchers:
+      - name: service
+        value: ipgeo-api
+        matchType: "="
+
+  receivers:
+    - name: ipgeo-webhook
+      webhookConfigs:
+        - url: http://alert-webhook-receiver.monitoring.svc.cluster.local:8080/alerts
+          sendResolved: true
+          maxAlerts: 20

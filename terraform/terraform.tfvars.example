@@ -1,0 +1,7 @@
+project_name        = "ipgeo-platform"
+location            = "nbg1"
+server_type         = "cx23"
+image               = "ubuntu-24.04"
+ssh_public_key_path = "~/.ssh/ipgeo-platform.pub"
+admin_cidr          = "91.107.255.255/32"
+network_cidr        = "10.10.0.0/24"

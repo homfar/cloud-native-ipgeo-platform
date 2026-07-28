@@ -1,0 +1,4 @@
+kubernetes_minor: "1.35"
+pod_cidr: "192.168.0.0/16"
+service_cidr: "10.96.0.0/12"
+calico_version: "v3.32.1"
