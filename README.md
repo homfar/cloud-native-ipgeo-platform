@@ -36,8 +36,6 @@ A reproducible cloud-native platform that provisions Kubernetes infrastructure o
 - [Secret rotation](#secret-rotation)
 - [Troubleshooting](#troubleshooting)
 - [Cleanup](#cleanup)
-- [Limitations](#limitations)
-- [Roadmap](#roadmap)
 - [Pre-commit checks](#pre-commit-checks)
 - [License](#license)
 
@@ -1458,12 +1456,6 @@ Dashboard JSON:
 python3 -m json.tool kubernetes/monitoring/grafana/dashboards/ipgeo-api-overview.json >/dev/null
 ```
 
-Forbidden public wording:
-
-```bash
-grep -RniE 'arvan|challenge|interview|assignment|recruitment' . --exclude-dir=.git --exclude-dir=.terraform --exclude='terraform.tfstate' --exclude='terraform.tfstate.*' --exclude='terraform.tfvars' --exclude='tfplan' --exclude='inventory.ini' | grep -v 'grep -RniE' || true
-```
-
 Expected: no output.
 
 Secret scan:
@@ -1490,6 +1482,4 @@ git status --short --ignored
 
 ## License
 
-No license is currently declared. Add a root `LICENSE` file before public release and update this section accordingly.
-
-MIT or Apache-2.0 are common permissive choices, but the repository owner should make the final decision.
+No license is currently declared.
