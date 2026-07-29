@@ -2,8 +2,6 @@
 
 A reproducible cloud-native platform that provisions Kubernetes infrastructure on Hetzner Cloud, installs Kubernetes with Ansible, deploys a three-instance PostgreSQL cluster with CloudNativePG, runs a FastAPI IP geolocation service, and provides monitoring with Prometheus, Grafana, and Alertmanager.
 
-> This repository is intended as a practical, public, end-to-end reference implementation. It is deliberately small enough to understand while still covering infrastructure as code, configuration management, Kubernetes operations, database high availability, application observability, alert routing, and operational validation.
-
 ---
 
 ## Table of contents
@@ -697,8 +695,7 @@ The current application manifest uses:
 imagePullPolicy: IfNotPresent
 ```
 
-Therefore Kubernetes will not pull the image. The exact image must already exist in the container runtime of every node that may run the API.
-
+With imagePullPolicy: IfNotPresent, Kubernetes reuses the image when it already exists on the node and pulls it from GHCR when it is missing.
 Current image setting:
 
 ```bash
@@ -1440,56 +1437,6 @@ terraform -chdir=terraform state list
 ```
 
 No output is expected after complete destruction.
-
----
-
-## Limitations
-
-- One control-plane node.
-- Node-local storage.
-- Local Terraform state.
-- No external load balancer.
-- No ingress controller.
-- No TLS ingress.
-- No object-storage PostgreSQL backup.
-- No point-in-time recovery.
-- No centralized logging.
-- External dependency on `ipwho.is`.
-- Kubernetes Secrets are not encrypted by default.
-- Application image currently uses `imagePullPolicy: IfNotPresent`.
-- API currently exposes detailed exception messages for `502` errors.
-
----
-
-## Roadmap
-
-- Highly available control plane.
-- Registry-based image publishing.
-- `IfNotPresent` or `Always` image policy.
-- Remote Terraform state with locking.
-- Ingress controller and TLS.
-- External load balancer.
-- CloudNativePG object-storage backups.
-- Point-in-time recovery.
-- Replicated storage.
-- NetworkPolicies.
-- PodDisruptionBudgets.
-- Horizontal Pod Autoscaling.
-- Resource quotas.
-- External Secrets or SOPS.
-- Kubernetes encryption at rest.
-- Loki centralized logging.
-- OpenTelemetry tracing.
-- GitHub Actions.
-- Gitleaks secret scanning.
-- Trivy image scanning.
-- Terraform security checks.
-- Integration tests.
-- API authentication and rate limiting.
-- Stable public error responses.
-- Retry and circuit-breaker handling.
-
----
 
 ## Pre-commit checks
 
